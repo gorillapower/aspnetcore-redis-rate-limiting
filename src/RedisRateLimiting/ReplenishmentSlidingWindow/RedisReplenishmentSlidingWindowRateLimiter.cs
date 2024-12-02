@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RedisRateLimiting
 {
-    public class RedishReplenishmentSlidingWindowLimiter<TKey> : ReplenishingRateLimiter
+    public class RedisReplenishmentSlidingWindowLimiter<TKey> : ReplenishingRateLimiter
     {
         private readonly RedisReplenishmentSlidingWindowManager _redisManager;
         private readonly RedisReplenishmentSlidingWindowRateLimiterOptions _options;
@@ -22,7 +22,7 @@ namespace RedisRateLimiting
             ? null
             : Stopwatch.GetElapsedTime(_idleSince);
 
-        public RedishReplenishmentSlidingWindowLimiter(TKey partitionKey, RedisSlidingWindowRateLimiterOptions options)
+        public RedisReplenishmentSlidingWindowLimiter(TKey partitionKey, RedisReplenishmentSlidingWindowRateLimiterOptions options)
         {
             if (options is null)
             {
@@ -46,6 +46,7 @@ namespace RedisRateLimiting
                 PermitLimit = options.PermitLimit,
                 Window = options.Window,
                 ConnectionMultiplexerFactory = options.ConnectionMultiplexerFactory,
+                ReplenishmentAbsoluteTimeout = options.ReplenishmentAbsoluteTimeout
             };
 
             _redisManager = new RedisReplenishmentSlidingWindowManager(partitionKey?.ToString() ?? string.Empty, _options);
@@ -131,7 +132,7 @@ namespace RedisRateLimiting
 
         private sealed class SlidingWindowLease : RateLimitLease
         {
-            private static readonly string[] s_allMetadataNames = new[] { RateLimitMetadataName.Limit.Name, RateLimitMetadataName.Remaining.Name };
+            private static readonly string[] s_allMetadataNames = new[] { RateLimitMetadataName.Limit.Name, RateLimitMetadataName.RequestId.Name, RateLimitMetadataName.Remaining.Name };
 
             private readonly SlidingWindowLeaseContext? _context;
 
@@ -156,6 +157,12 @@ namespace RedisRateLimiting
                 if (metadataName == RateLimitMetadataName.Remaining.Name && _context is not null)
                 {
                     metadata = Math.Max(_context.Limit - _context.Count, 0);
+                    return true;
+                }
+                
+                if (metadataName == RateLimitMetadataName.RequestId.Name && _context is not null)
+                {
+                    metadata = _context.RequestId;
                     return true;
                 }
 

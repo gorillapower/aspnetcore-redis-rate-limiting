@@ -21,7 +21,7 @@ namespace RedisRateLimiting
         /// <summary>
         /// Specifies the time interval after which the rate limiter will try and replenish
         /// </summary>
-        public TimeSpan ReplenishmentPeriod { get; set; } = TimeSpan.FromSeconds(100);
+        // public TimeSpan ReplenishmentPeriod { get; set; } = TimeSpan.FromSeconds(100);
 
         /// <summary>
         /// Maximum number of permit counters that can be allowed in a window.

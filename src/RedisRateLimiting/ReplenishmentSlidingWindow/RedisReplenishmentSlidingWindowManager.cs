@@ -164,7 +164,7 @@ internal class RedisReplenishmentSlidingWindowManager
             StatisticsScript,
             new
             {
-                rate_limit_key = RateLimitWindowKey,
+                rate_limit_key_window = RateLimitWindowKey,
                 stats_key = StatsRateLimitKey,
             });
 

@@ -30,5 +30,10 @@ namespace RedisRateLimiting
         /// For example, used in <see cref="RedisFixedWindowRateLimiter{TKey}"/>.
         /// </summary>
         public static MetadataName<long> Reset { get; } = MetadataName.Create<long>("RATELIMIT_RESET");
+        
+        /// <summary>
+        /// The unique identifier for the request.
+        /// </summary>
+        public static MetadataName<string> RequestId { get; } = MetadataName.Create<string>("RATELIMIT_REQUESTID");
     }
 }
