@@ -23,4 +23,4 @@ jobs:
           dotnet pack -c Release -o artifacts -p:PackageVersion=1.0.0 -p:PackageId=Gorillapower.RedisRateLimiting
 
       - name: Push
-        run: dotnet nuget push ./src/RedisRateLimiting/artifacts/Gorillapower.RedisRateLimiting.1.1.0.nupkg -k ${{ secrets.NUGET_APIKEY }} -s https://api.nuget.org/v3/index.json
+        run: dotnet nuget push ./src/RedisRateLimiting/artifacts/Gorillapower.RedisRateLimiting.1.0.0.nupkg -k ${{ secrets.NUGET_APIKEY }} -s https://api.nuget.org/v3/index.json
